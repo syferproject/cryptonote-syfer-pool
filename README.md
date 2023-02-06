@@ -1,11 +1,13 @@
 cryptonote-nodejs-pool
 ======================
 
-High performance Node.js (with native C addons) mining pool for CryptoNote based coins. Comes with lightweight example front-end script which uses the pool's AJAX API. Support for Cryptonight (Original, Monero v7, Stellite v7), Cryptonight Light (Original, Aeon v7, IPBC) Cryptonight Fast (Electronero/Crystaleum), and Cryptonight Heavy (Sumokoin) algorithms.
+High performance Node.js (with native C addons) mining pool for CryptoNote based coins. Comes with lightweight example front-end script which uses the pool's AJAX API. Support for Cryptonight (Original, Monero v7, Stellite v7), Cryptonight Light (Original, Aeon v7, IPBC) and Cryptonight Heavy (Sumokoin) algorithms.
 
 
 #### Table of Contents
 * [Features](#features)
+* [Community Support](#community--support)
+* [Pools Using This Software](#pools-using-this-software)
 * [Usage](#usage)
   * [Requirements](#requirements)
   * [Downloading & Installing](#1-downloading--installing)
@@ -17,9 +19,6 @@ High performance Node.js (with native C addons) mining pool for CryptoNote based
   * [Upgrading](#upgrading)
 * [JSON-RPC Commands from CLI](#json-rpc-commands-from-cli)
 * [Monitoring Your Pool](#monitoring-your-pool)
-* [Community Support](#community--support)
-* [Pools Using This Software](#pools-using-this-software)
-* [Referral Links](#referral-links)
 * [Donations](#donations)
 * [Credits](#credits)
 * [License](#license)
@@ -85,18 +84,36 @@ Features
 #### Extra features
 * An easily extendable, responsive, light-weight front-end using API to display data
 * Onishin's [keepalive function](https://github.com/perl5577/cpuminer-multi/commit/0c8aedb)
-* Support for merged mining
 * Support for slush mining system (disabled by default)
 * E-Mail Notifications on worker connected, disconnected (timeout) or banned (support MailGun, SMTP and Sendmail)
 * Telegram channel notifications when a block is unlocked
 * Top 10 miners report
 * Multilingual user interface
 
+
+Community / Support
+===
+
+* [GitHub Wiki](https://github.com/dvandal/cryptonote-nodejs-pool/wiki)
+* [GitHub Issues](https://github.com/dvandal/cryptonote-nodejs-pool/issues)
+* [Telegram Group](http://t.me/CryptonotePool)
+
+#### Pools Using This Software
+
+* https://imaginary.stream/
+* https://graft.anypool.net/
+* https://www.dark-mine.su/
+* http://itns.proxpool.com/
+* https://bytecoin.pt/
+* https://pool.leviar.io/
+* https://pool.croatpirineus.cat/
+
 Usage
 ===
 
 #### Requirements
 * Coin daemon(s) (find the coin's repo and build latest version from source)
+  * [List of Cryptonote coins](https://github.com/dvandal/cryptonote-nodejs-pool/wiki/Cryptonote-Coins)
 * [Node.js](http://nodejs.org/) v11.0+
   * For Ubuntu: 
  ```
@@ -128,9 +145,6 @@ echo 1024 > /proc/sys/net/core/somaxconn
 
 * Boost is required for the cryptoforknote-util module
   * For Ubuntu: `sudo apt-get install libboost-all-dev`
-  
-* libsodium  
-  * For Ubuntu: `sudo apt-get install libsodium-dev`
 
 
 ##### Seriously
@@ -154,7 +168,7 @@ sudo su - your-user
 Clone the repository and run `npm update` for all the dependencies to be installed:
 
 ```bash
-git clone https://github.com/dvandal/cryptonote-nodejs-pool.git pool
+git clone https://github.com/muscleman/cryptonote-nodejs-pool.git pool
 cd pool
 
 npm update
@@ -170,22 +184,19 @@ Explanation for each field:
 "poolHost": "your.pool.host",
 
 /* Used for storage in redis so multiple coins can share the same redis instance. */
-"coin": "monero", // Must match the parentCoin variable in config.js
+"coin": "graft",
 
 /* Used for front-end display */
-"symbol": "XMR",
+"symbol": "GRFT",
 
 /* Minimum units in a single coin, see COIN constant in DAEMON_CODE/src/cryptonote_config.h */
-"coinUnits": 1000000000000,
+"coinUnits": 10000000000,
 
 /* Number of coin decimals places for notifications and front-end */
 "coinDecimalPlaces": 4,
   
 /* Coin network time to mine one block, see DIFFICULTY_TARGET constant in DAEMON_CODE/src/cryptonote_config.h */
 "coinDifficultyTarget": 120,
-
-"blockchainExplorer": "http://blockexplorer.arqma.com/block/{id}",  //used on blocks page to generate hyperlinks.
-"transactionExplorer": "http://blockexplorer.arqma.com/tx/{id}",    //used on the payments page to generate hyperlinks
 
 /* Set daemon type. Supported values: default, forknote (Fix block height + 1), bytecoin (ByteCoin Wallet RPC API) */
 "daemonType": "default",
@@ -199,8 +210,7 @@ Explanation for each field:
 "cnVariant": 1,
 "cnBlobType": 0,
 "includeHeight":false, /*true to include block.height in job to miner*/
-"includeAlgo":"cn/wow", /*wownero specific change to include algo in job to miner*/	
-"isRandomX": true,
+"includeAlgo":"cn/wow", /*wownero specific change to include algo in job to miner*/
 /* Logging */
 "logging": {
 
@@ -224,24 +234,12 @@ Explanation for each field:
         "colors": true
     }
 },
-"childPools":[ {"poolAddress":"your wallet",
-                    "intAddressPrefix": null,
-                    "coin": "MCN",  	//must match COIN name in the child pools config.json
-                    "childDaemon": {
-                        "host": "127.0.0.1",
-                        "port": 26081
-                    },
-                    "pattern": "^Vdu",  //regex to identify which childcoin the miner specified in password. eg) Vdu is first 3 chars of a MCN wallet address.
-                    "blockchainExplorer": "https://explorer.mcn.green/?hash={id}#blockchain_block",
-                    "transactionExplorer": "https://explorer.mcn.green/?hash={id}#blockchain_transaction",
-                    "api": "https://multi-miner.smartcoinpool.net/apiMerged1",
-                    "enabled": true
-                    }
-]
+/*Which Hashing Package to use: cryptonight-hashing=false, multi-hashing=true*/
+"hashingUtil":false,
 /* Modular Pool Server */
 "poolServer": {
     "enabled": true,
-    "mergedMining":false,
+
     /* Set to "auto" by default which will spawn one process/fork/worker for each CPU
        core in your system. Each of these workers will run a separate instance of your
        pool(s), and the kernel will load balance miners using these forks. Optionally,
@@ -249,17 +247,11 @@ Explanation for each field:
     "clusterForks": "auto",
 
     /* Address where block rewards go, and miner payments come from. */
-    "poolAddress": "your wallet",
-    
-    /* This is the Public address prefix used for miner login validation. */
-    "pubAddressPrefix": 343,
-    
-    /* This is the Integrated address prefix used for miner login validation. */
-    "intAddressPrefix": 340,
-    
-    /* This is the Subaddress prefix used for miner login validation. */
-    "subAddressPrefix": 439,
-    
+    "poolAddress": "GBqRuitSoU3PFPBAkXMEnLdBRWXH4iDSD6RDxnQiEFjVJhWUi1UuqfV5EzosmaXgpPGE6JJQjMYhZZgWY8EJQn8jQTsuTit",
+
+    /* This is the integrated address prefix used for miner login validation. */
+    "intAddressPrefix": 91,
+
     /* Poll RPC daemons for new blocks every this many milliseconds. */
     "blockRefreshInterval": 1000,
 
@@ -327,8 +319,6 @@ Explanation for each field:
     "paymentId": {
         "addressSeparator": ".", // Character separator between <address> and <paymentID>
         "validation": true // Refuse login if non alphanumeric characters in <paymentID>
-        "validations": ["1,16", "64"], //regex quantity. range 1-16 characters OR exactly 64 character
-        "ban": true  // ban the miner for invalid paymentid
     },
 
     /* Feature to trust share difficulties from miners which can
@@ -384,8 +374,6 @@ Explanation for each field:
        the variable CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW */
     "depth": 60,
     "poolFee": 0.8, // 0.8% pool fee (1% total fee total including donations)
-    "soloFee": 0, // solo fee
-    "finderReward": 0.2, // 0.2 finder reward
     "devDonation": 0.2, // 0.2% donation to send to pool dev
     "networkFee": 0.0, // Network/Governance fee (used by some coins like Loki)
     
@@ -422,6 +410,7 @@ Explanation for each field:
 "wallet": {
     "host": "127.0.0.1",
     "port": 18982,
+    "username": "--rpc-username", //monero based wallet authentication
     "password": "--rpc-password"
 },
 
@@ -634,7 +623,7 @@ node init.js -module=api
 [Example screenshot](http://i.imgur.com/SEgrI3b.png) of running the pool in single module mode with tmux.
 
 To keep your pool up, on operating system with systemd, you can create add your pool software as a service.  
-Use this [example](https://github.com/dvandal/cryptonote-nodejs-pool/blob/master/deployment/cryptonote-nodejs-pool.service) to create the systemd service `/lib/systemd/system/cryptonote-nodejs-pool.service`
+Use this [example](https://github.com/muscleman/cryptonote-nodejs-pool/blob/master/deployment/cryptonote-nodejs-pool.service) to create the systemd service `/lib/systemd/system/cryptonote-nodejs-pool.service`
 Then enable and start the service with the following commands : 
 
 ```
@@ -782,51 +771,29 @@ curl 127.0.0.1:18081/json_rpc -d '{"method":"getblockheaderbyheight","params":{"
 * To keep your pool node script running in background, logging to file, and automatically restarting if it crashes - I suggest using [forever](https://github.com/nodejitsu/forever) or [PM2](https://github.com/Unitech/pm2)
 
 
-Community / Support
-===
-
-* [GitHub Issues](https://github.com/dvandal/cryptonote-nodejs-pool/issues)
-* [Telegram Group](http://t.me/CryptonotePool)
-
-#### Pools Using This Software
-
-* https://pool.leviar.io/
-* https://pool.croat.community/
-
-Referral Links
---------------
-* NiceHash Miner - Test your mining pool: [https://www.nicehash.com/?refby=938d7799-8f8e-4935-975e-897a1567b1ed](https://www.nicehash.com/?refby=938d7799-8f8e-4935-975e-897a1567b1ed)
-* Binance Exchange - Buy and Sell cryptos: [https://www.binance.com/en/register?ref=92696209](https://www.binance.com/en/register?ref=92696209)
-* Coinbase Wallet - Buy 100$ USD and get 10$ USD free: [https://www.coinbase.com/join/vandal_y](https://www.coinbase.com/join/vandal_y)
-* Shakepay Wallet - Buy 100$ CAD and get 30$ CAD free: [https://shakepay.me/r/VDAIT0G](https://shakepay.me/r/VDAIT0G)
-
 Donations
 ---------
 
 Thanks for supporting my works on this project! If you want to make a donation to [Dvandal](https://github.com/dvandal/), the developper of this project, you can send any amount of your choice to one of theses addresses:
 
-* Bitcoin (BTC): `392gS9zuYQBghmMpK3NipBTaQcooR9UoGy`
-* Bitcoin Cash (BCH): `qp46fz7ht8xdhwepqzhk7ct3aa0ucypfgv5qvv57td`
-* Monero (XMR): `49WyMy9Q351C59dT913ieEgqWjaN12dWM5aYqJxSTZCZZj1La5twZtC3DyfUsmVD3tj2Zud7m6kqTVDauRz53FqA9zphHaj`
-* Dash (DASH): `XgFnxEu1ru7RTiM4uH1GWt2yseU1BVBqWL`
-* Ethereum (ETH): `0x8c42D411545c9E1963ff56A91d06dEB8C4A9f444`
-* Ethereum Classic (ETC): `0x4208D6775A2bbABe64C15d76e99FE5676F2768Fb`
+* Bitcoin (BTC): `17XRyHm2gWAj2yfbyQgqxm25JGhvjYmQjm`
+* Bitcoin Cash (BCH): `qpl0gr8u3yu7z4nzep955fqy3w8m6w769sec08u3dp`
+* Ethereum (ETH): `0x83ECF65934690D132663F10a2088a550cA201353`
 * Litecoin (LTC): `LS9To9u2C95VPHKauRMEN5BLatC8C1k4F1`
-* USD Coin (USDC): `0xb5c6BEc389252F24dd3899262AC0D2754B0fC1a3`
-* Augur (REP): `0x5A66CE95ea2428BC5B2c7EeB7c96FC184258f064`
-* Basic Attention Token (BAT): `0x5A66CE95ea2428BC5B2c7EeB7c96FC184258f064`
-* Chainlink (LINK): `0x5A66CE95ea2428BC5B2c7EeB7c96FC184258f064`
-* Dai (DAI): `0xF2a50BcCEE8BEb7807dA40609620e454465B40A1`
-* Orchid (OXT): `0xf52488AAA1ab1b1EB659d6632415727108600BCb`
-* Tezos (XTZ): `tz1T1idcT5hfyjfLHWeqbYvmrcYn5JgwrJKW`
-* Zcash (ZCH): `t1YTGVoVbeCuTn3Pg9MPGrSqweFLPGTQ7on`
-* 0x (ZRX): `0x4e52AAfC6dAb2b7812A0a7C24a6DF6FAab65Fc9a`
+* Monero (XMR): `49WyMy9Q351C59dT913ieEgqWjaN12dWM5aYqJxSTZCZZj1La5twZtC3DyfUsmVD3tj2Zud7m6kqTVDauRz53FqA9zphHaj`
+* Graft (GRFT): `GBqRuitSoU3PFPBAkXMEnLdBRWXH4iDSD6RDxnQiEFjVJhWUi1UuqfV5EzosmaXgpPGE6JJQjMYhZZgWY8EJQn8jQTsuTit`
+* Haven (XHV): `hvxy2RAzE7NfXPLE3AmsuRaZztGDYckCJ14XMoWa6BUqGrGYicLCcjDEjhjGAQaAvHYGgPD7cGUwcYP7nEUs8u6w3uaap9UZTf`
+* IntenseCoin (ITNS): `iz4fRGV8XsRepDtnK8XQDpHc3TbtciQWQ5Z9285qihDkCAvB9VX1yKt6qUCY6sp2TCC252SQLHrjmeLuoXsv4aF42YZtnZQ53`
+* Masari (MSR): `5n7mffxVT9USrq7tcG3TM8HL5yAz7MirUWypXXJfHrNfTcjNtDouLAAGex8s8htu4vBpmMXFzay8KG3jYGMFhYPr2aMbN6i`
+* Stellite (XTL): `Se45GzgpFG3CnvYNwEFnxiRHD2x7YzRnhFLdxjUqXdbv3ysNbfW5U7aUdn87RgMRPM7xwN6CTbXNc7nL5QUgcww11bDeypTe1`
+
 
 Credits
 ---------
 
 * [fancoder](//github.com/fancoder) - Developper on cryptonote-universal-pool project from which current project is forked.
-* [dvandal](//github.com/dvandal) - Developer of cryptonote-nodejs-pool software
+* dvandal (//github.com/dvandal) - Developer of cryptonote-nodejs-pool software
+* Musclesonvacation (//github.com/muscleman) - Current developer for pool software
 
 License
 -------

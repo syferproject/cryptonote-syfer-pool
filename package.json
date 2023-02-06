@@ -1,33 +1,32 @@
 {
-	"name": "cryptonote-nodejs-pool",
-	"version": "1.4.1",
-	"license": "GPL-2.0",
-	"author": "Daniel Vandal",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/dvandal/cryptonote-nodejs-pool.git"
-	},
-	"dependencies": {
-		"async": "^3.2.0",
-		"base58-native": "*",
-		"bignum": "*",
-		"bufferutil": "*",
-		"cli-color": "*",
-		"cryptoforknote-util": "git+https://github.com/MoneroOcean/node-cryptoforknote-util.git",
-		"cryptonight-hashing": "git+https://github.com/MoneroOcean/node-cryptonight-hashing.git",
-		"dateformat": "^4.5.1",
-		"domexception": "*",
-		"mailgun.js": "*",
-		"node-telegram-bot-api": "*",
-		"nodemailer": "^6.4.18",
-		"nodemailer-sendmail-transport": "*",
-		"redis": "*",
-		"socket.io": "^3.1.1",
-		"time-ago": "*",
-		"turtlecoin-multi-hashing": "git+https://github.com/turtlecoin/turtlecoin-crypto.git",
-		"utf-8-validate": "*"
-	},
-	"engines": {
-		"node": ">=8.11.3"
-	}
+    "name": "cryptonote-nodejs-pool",
+    "version": "1.4.0",
+    "license": "GPL-2.0",
+    "Original author": "Daniel Vandal",
+    "Maintained by": "Musclesonvacation",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/muscleman/cryptonote-nodejs-pool.git"
+    },
+    "dependencies": {
+        "async": "1",
+        "base58-native": "*",
+        "bignum": "*",
+        "cli-color": "*",
+        "cryptoforknote-util": "git+https://github.com/MoneroOcean/node-cryptoforknote-util.git#v8.0.0",
+		"cryptonight-hashing": "git+https://github.com/ryo-currency/node-cryptonight-hashing.git",
+        "dateformat": "4.5.1",
+        "mailgun.js": "*",
+        "node-telegram-bot-api": "*",
+        "nodemailer": "2.7.2",
+        "nodemailer-sendmail-transport": "*",
+        "redis": "3.1.2",
+        "socket.io": "^2.1.1",
+        "time-ago": "*",
+        "request": "^2.88.0",
+        "request-promise-native": "^1.0.5"
+    },
+    "engines": {
+        "node": ">=8.11.3"
+    }
 }
